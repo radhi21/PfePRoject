@@ -16,7 +16,7 @@ public class JwtResponse {
     this.username = username;
     this.email = email;
     this.roles = roles;
-  }
+  } 
 
   public String getAccessToken() {
     return token;

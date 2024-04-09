@@ -2,12 +2,14 @@ package com.demo.springjwt.controllers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +17,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +37,7 @@ import com.demo.springjwt.repository.RoleRepository;
 import com.demo.springjwt.repository.UserRepository;
 import com.demo.springjwt.security.jwt.JwtUtils;
 import com.demo.springjwt.security.services.UserDetailsImpl;
-
+ 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -44,7 +50,7 @@ public class AuthController {
 
   @Autowired
   RoleRepository roleRepository;
-
+ 
   @Autowired
   PasswordEncoder encoder;
 
@@ -126,4 +132,44 @@ public class AuthController {
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
+  
+
+
+@GetMapping("/users")
+public ResponseEntity<List<User>> getAllUsers() {
+    List<User> users = userRepository.findAll(); 
+    return ResponseEntity.ok(users);
+} 
+
+@GetMapping("/users/{id}")
+public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    Optional<User> userData = userRepository.findById(id);
+    return userData.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+}
+
+@PutMapping("/users/{id}")
+public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+    Optional<User> userData = userRepository.findById(id);
+    if (userData.isPresent()) {
+        User user = userData.get();
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
+        user.setPassword(encoder.encode(userDetails.getPassword()));
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
+    } else {
+        return ResponseEntity.notFound().build();
+    }
+} 
+
+@DeleteMapping("/users/{id}")
+public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) {
+        userRepository.deleteById(id);
+        return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
+    } else {
+        return ResponseEntity.notFound().build();
+    }
+}
 }
