@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -55,7 +56,7 @@ public class AuthController {
   PasswordEncoder encoder;
 
   @Autowired
-  JwtUtils jwtUtils;
+  JwtUtils jwtUtils; 
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -134,42 +135,49 @@ public class AuthController {
   }
   
 
+ 
 
-@GetMapping("/users")
-public ResponseEntity<List<User>> getAllUsers() {
-    List<User> users = userRepository.findAll(); 
-    return ResponseEntity.ok(users);
-} 
+  @GetMapping("/users/role/user")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<List<User>> getUsersByRoleUser() {
+      List<User> usersWithUserRole = userRepository.findAllByRolesName(ERole.ROLE_USER);
+      return ResponseEntity.ok(usersWithUserRole);
+  }
+ 
 
-@GetMapping("/users/{id}")
-public ResponseEntity<User> getUserById(@PathVariable Long id) {
-    Optional<User> userData = userRepository.findById(id);
-    return userData.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-}
+  @GetMapping("/users/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<User> getUserById(@PathVariable Long id) {
+      Optional<User> userData = userRepository.findById(id);
+      return userData.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+  }
 
-@PutMapping("/users/{id}")
-public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-    Optional<User> userData = userRepository.findById(id);
-    if (userData.isPresent()) {
-        User user = userData.get();
-        user.setUsername(userDetails.getUsername());
-        user.setEmail(userDetails.getEmail());
-        user.setPassword(encoder.encode(userDetails.getPassword()));
-        userRepository.save(user);
-        return ResponseEntity.ok(user);
-    } else {
-        return ResponseEntity.notFound().build();
-    }
-} 
+  @PutMapping("/users/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+      Optional<User> userData = userRepository.findById(id);
+      if (userData.isPresent()) {
+          User user = userData.get();
+          user.setUsername(userDetails.getUsername());
+          user.setEmail(userDetails.getEmail());
+          user.setPassword(encoder.encode(userDetails.getPassword()));
+          userRepository.save(user);
+          return ResponseEntity.ok(user);
+      } else {
+          return ResponseEntity.notFound().build();
+      }
+  }    
 
-@DeleteMapping("/users/{id}")
-public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
-    Optional<User> user = userRepository.findById(id);
-    if (user.isPresent()) {
-        userRepository.deleteById(id);
-        return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
-    } else {
-        return ResponseEntity.notFound().build();
-    }
-}
-}
+  @DeleteMapping("/users/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
+      Optional<User> user = userRepository.findById(id);
+      if (user.isPresent()) {
+          userRepository.deleteById(id);
+          return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
+      } else {
+          return ResponseEntity.notFound().build();
+      }
+  }
+  }
+
