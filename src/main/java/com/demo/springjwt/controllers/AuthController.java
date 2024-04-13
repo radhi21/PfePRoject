@@ -127,15 +127,15 @@ public class AuthController {
         }
       });
     }
-
+    
     user.setRoles(roles);
     userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
-  
-
+    
  
+   
 
   @GetMapping("/users/role/user")
   @PreAuthorize("hasRole('ADMIN')")
@@ -143,7 +143,7 @@ public class AuthController {
       List<User> usersWithUserRole = userRepository.findAllByRolesName(ERole.ROLE_USER);
       return ResponseEntity.ok(usersWithUserRole);
   }
- 
+  
 
   @GetMapping("/users/{id}")
   @PreAuthorize("hasRole('ADMIN')")
@@ -167,7 +167,7 @@ public class AuthController {
           return ResponseEntity.notFound().build();
       }
   }    
-
+ 
   @DeleteMapping("/users/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
