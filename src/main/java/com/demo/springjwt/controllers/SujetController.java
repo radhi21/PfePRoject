@@ -59,16 +59,17 @@ public class SujetController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
     @PostMapping("/sujets")
     public ResponseEntity<Sujet> createSujet(@RequestBody Sujet sujet) {
         try {
+            
             Sujet _sujet = sujetRepository.save(sujet);
             return new ResponseEntity<>(_sujet, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping("/sujets/{id}")
     public ResponseEntity<Sujet> updateSujet(@PathVariable("id") long id, @RequestBody Sujet sujet) {
@@ -117,5 +118,5 @@ public class SujetController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }   
 }

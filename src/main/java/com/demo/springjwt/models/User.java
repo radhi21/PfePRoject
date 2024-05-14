@@ -25,6 +25,12 @@ public class User {
 
   private String password;
 
+  private String phoneNumber; // Added phone number field
+
+  private String photo; // Added photo field
+  
+  private String status; // Added status field
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(  name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id"), 
@@ -65,11 +71,35 @@ public class User {
   }
 
   public String getPassword() {
-    return password;
+    return password; 
   }
-
+ 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getPhoto() {
+    return photo;
+  }
+
+  public void setPhoto(String photo) {
+    this.photo = photo;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public Set<Role> getRoles() {
@@ -79,4 +109,6 @@ public class User {
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
   }
-} 
+}
+
+

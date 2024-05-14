@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
   
 @Entity
@@ -13,7 +15,7 @@ public class Reclamation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+ 
     @Column(name = "titreReclamation")
     private String titreReclamation;
 
@@ -22,10 +24,15 @@ public class Reclamation {
 
     @Column(name = "etat")
     private String etat;
-
+   
+    @ManyToOne
+    @JoinColumn(name = "id_candidature") // Nom de la colonne de clé étrangère dans la table reclamations
+    private Candidature candidature;
+     
     public Reclamation() {
     }
 
+    // Getters et Setters pour id, titreReclamation, description, etat
     public Long getId() {
         return id;
     }
@@ -56,5 +63,14 @@ public class Reclamation {
 
     public void setEtat(String etat) {
         this.etat = etat;
+    }
+
+    // Getter et Setter pour la relation Many-to-One avec Candidature
+    public Candidature getCandidature() {
+        return candidature;
+    }
+
+    public void setCandidature(Candidature candidature) {
+        this.candidature = candidature;
     }
 }

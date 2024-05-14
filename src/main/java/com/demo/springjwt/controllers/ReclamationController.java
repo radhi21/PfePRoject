@@ -58,17 +58,32 @@ public class ReclamationController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
+    }  
+    
     @PostMapping("/reclamations")
     public ResponseEntity<Reclamation> createReclamation(@RequestBody Reclamation reclamation) {
         try {
+            // Accédez directement à l'ID de la candidature à partir de l'objet Candidature associé
+            if (reclamation.getCandidature() != null) {
+                Long idCandidature = reclamation.getCandidature().getId();
+                System.out.println("ID de la candidature : " + idCandidature);
+            }
+            
+            // Enregistrer la réclamation dans la base de données
             Reclamation _reclamation = reclamationRepository.save(reclamation);
+            
+            // Retourner la réponse avec la réclamation créée
             return new ResponseEntity<>(_reclamation, HttpStatus.CREATED);
         } catch (Exception e) {
+            // Retourner une réponse d'erreur en cas d'échec de l'enregistrement
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+ 
+         
+
 
     @PutMapping("/reclamations/{id}")
     public ResponseEntity<Reclamation> updateReclamation(@PathVariable("id") long id, @RequestBody Reclamation reclamation) {
@@ -83,7 +98,7 @@ public class ReclamationController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    } 
+    }  
 
     @DeleteMapping("/reclamations/{id}")
     public ResponseEntity<HttpStatus> deleteReclamation(@PathVariable("id") long id) {

@@ -1,10 +1,15 @@
 package com.demo.springjwt.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
   
 @Entity
@@ -22,7 +27,8 @@ public class Sujet {
 
     @Column(name = "niveau")
     private String niveau;
-
+    
+   
     public Sujet() {
     }
 
@@ -57,4 +63,6 @@ public class Sujet {
     public void setNiveau(String niveau) {
         this.niveau = niveau;
     }
-}
+
+	}
+

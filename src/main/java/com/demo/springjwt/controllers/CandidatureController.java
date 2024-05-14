@@ -28,17 +28,13 @@ public class CandidatureController {
 
     @Autowired
     private CandidatureRepository candidatureRepository;
-
+    
     @GetMapping("/candidatures")
-    public ResponseEntity<List<Candidature>> getAllCandidatures(@RequestParam(required = false) String sujet) {
+    public ResponseEntity<List<Candidature>> getAllCandidatures() {
         try {
             List<Candidature> candidatures = new ArrayList<>();
-
-            if (sujet == null)
-                candidatureRepository.findAll().forEach(candidatures::add);
-            else
-                candidatureRepository.findBySujetContainingIgnoreCase(sujet).forEach(candidatures::add);
-
+            candidatureRepository.findAll().forEach(candidatures::add);
+ 
             if (candidatures.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -49,6 +45,7 @@ public class CandidatureController {
         }
     }
 
+
     @GetMapping("/candidatures/{id}")
     public ResponseEntity<Candidature> getCandidatureById(@PathVariable("id") long id) {
         Optional<Candidature> candidatureData = candidatureRepository.findById(id);
@@ -58,17 +55,23 @@ public class CandidatureController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
+    } 
 
     @PostMapping("/candidatures")
     public ResponseEntity<Candidature> createCandidature(@RequestBody Candidature candidature) {
         try {
+            // Accéder à l'identifiant du sujet associé à la candidature
+            Long sujetId = candidature.getSujet().getId();
+            System.out.println("ID du sujet associé à la candidature : " + sujetId);
+ 
             Candidature _candidature = candidatureRepository.save(candidature);
             return new ResponseEntity<>(_candidature, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @PutMapping("/candidatures/{id}")
     public ResponseEntity<Candidature> updateCandidature(@PathVariable("id") long id, @RequestBody Candidature candidature) {
@@ -77,7 +80,7 @@ public class CandidatureController {
         if (candidatureData.isPresent()) {
             Candidature _candidature = candidatureData.get();
             _candidature.setStagier(candidature.getStagier());
-            _candidature.setSujet(candidature.getSujet());
+            
             _candidature.setResponsable(candidature.getResponsable());
             _candidature.setStatut(candidature.getStatut());
             return new ResponseEntity<>(candidatureRepository.save(_candidature), HttpStatus.OK);
@@ -111,7 +114,7 @@ public class CandidatureController {
         try {
             List<Candidature> candidatures = candidatureRepository.findByStatut(statut);
 
-            if (candidatures.isEmpty()) {
+            if (candidatures.isEmpty()) { 
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(candidatures, HttpStatus.OK);

@@ -57,6 +57,8 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils; 
+  
+  
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -79,9 +81,11 @@ public class AuthController {
                          roles));
   }
 
+  
   @PostMapping("/signup")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+  public ResponseEntity<?> registerUser( @RequestBody SignupRequest signUpRequest) {
+	  System.out.println(signUpRequest.toString());
+	  if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
           .badRequest()
           .body(new MessageResponse("Error: Username is already taken!"));
@@ -114,12 +118,19 @@ public class AuthController {
           roles.add(adminRole);
 
           break;
-        case "mod":
-          Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+        case "rh":
+          Role rhRole = roleRepository.findByName(ERole.ROLE_RH)
               .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(modRole);
+          roles.add(rhRole);
 
           break;
+        case "tech":
+            Role techRole = roleRepository.findByName(ERole.ROLE_TECH)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(techRole);
+
+            break;
+          
         default:
           Role userRole = roleRepository.findByName(ERole.ROLE_USER)
               .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -132,13 +143,13 @@ public class AuthController {
     userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-  }
+  } 
     
  
-   
+ 
+    
 
   @GetMapping("/users/role/user")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<User>> getUsersByRoleUser() {
       List<User> usersWithUserRole = userRepository.findAllByRolesName(ERole.ROLE_USER);
       return ResponseEntity.ok(usersWithUserRole);
@@ -146,14 +157,12 @@ public class AuthController {
   
 
   @GetMapping("/users/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<User> getUserById(@PathVariable Long id) {
       Optional<User> userData = userRepository.findById(id);
       return userData.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @PutMapping("/users/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
       Optional<User> userData = userRepository.findById(id);
       if (userData.isPresent()) {
@@ -164,12 +173,11 @@ public class AuthController {
           userRepository.save(user);
           return ResponseEntity.ok(user);
       } else {
-          return ResponseEntity.notFound().build();
+          return ResponseEntity.notFound().build(); 
       }
   }    
  
   @DeleteMapping("/users/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
       Optional<User> user = userRepository.findById(id);
       if (user.isPresent()) {
