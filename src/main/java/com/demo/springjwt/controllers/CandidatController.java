@@ -26,7 +26,7 @@ public class CandidatController {
         }
         return new ResponseEntity<>(candidats, HttpStatus.OK);
     }
-
+ 
     @GetMapping("/candidats/{id}")
     public ResponseEntity<Candidat> getCandidatById(@PathVariable("id") long id) {
         Optional<Candidat> candidatData = candidatRepository.findById(id);
@@ -42,7 +42,7 @@ public class CandidatController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    } 
 
     @PutMapping("/candidats/{id}")
     public ResponseEntity<Candidat> updateCandidat(@PathVariable("id") long id, @RequestBody Candidat candidat) {

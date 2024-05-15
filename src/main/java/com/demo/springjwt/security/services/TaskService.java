@@ -16,8 +16,8 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
-
-    @Autowired
+  
+    @Autowired 
     private ResponseRepository responseRepository;
 
     public List<Task> getAllTasks() {
@@ -34,9 +34,9 @@ public class TaskService {
             task.setStatus(status);
             return taskRepository.save(task);
         } else {
-            return null;
-        }
-    }
+            return null; 
+        }  
+    }   
 
     public Response addResponse(Long taskId, String responder, String response) {
         Task task = taskRepository.findById(taskId).orElse(null);
@@ -46,10 +46,10 @@ public class TaskService {
             newResponse.setResponder(responder);
             newResponse.setResponse(response);
             return responseRepository.save(newResponse);
-        } else {
-            return null;
+        } else { 
+            return null; 
         }
-    }
+    } 
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);

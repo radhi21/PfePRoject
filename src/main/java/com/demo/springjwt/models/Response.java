@@ -13,7 +13,7 @@ public class Response {
     private Long id;
     private Long taskId;
     private String responder; // RH ou équipe technique
-    private String response;
+    private String response; 
 
     // Constructeurs
     public Response() {
@@ -36,7 +36,7 @@ public class Response {
 
     public Long getTaskId() {
         return taskId;
-    }
+    } 
 
     public void setTaskId(Long taskId) {
         this.taskId = taskId;
@@ -56,5 +56,4 @@ public class Response {
 
     public void setResponse(String response) {
         this.response = response;
-    }
-}
+    }}

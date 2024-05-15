@@ -12,6 +12,8 @@ public class Task {
     private Long id;
     private String name;
     private TaskStatus status;
+    
+    
 
     public Task() {
     }
@@ -19,7 +21,7 @@ public class Task {
     public Task(String name, TaskStatus status) {
         this.name = name;
         this.status = status;
-    }
+    } 
 
     public Long getId() {
         return id;
@@ -43,5 +45,4 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
-    }
-}
+    }}
