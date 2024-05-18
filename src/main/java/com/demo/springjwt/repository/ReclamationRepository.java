@@ -10,3 +10,4 @@ public interface ReclamationRepository extends JpaRepository<Reclamation, Long> 
     List<Reclamation> findByTitreReclamationContainingIgnoreCase(String titreReclamation);
     List<Reclamation> findByEtat(String etat);
 }
+ 

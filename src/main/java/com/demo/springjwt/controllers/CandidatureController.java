@@ -108,7 +108,7 @@ public class CandidatureController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
- 
+  
     @GetMapping("/candidatures/statut/{statut}")
     public ResponseEntity<List<Candidature>> findByStatut(@PathVariable("statut") String statut) {
         try {

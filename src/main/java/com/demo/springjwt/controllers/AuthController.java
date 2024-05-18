@@ -47,7 +47,7 @@ public class AuthController {
   AuthenticationManager authenticationManager;
 
   @Autowired
-  UserRepository userRepository;
+  UserRepository userRepository; 
 
   @Autowired
   RoleRepository roleRepository;
@@ -174,7 +174,7 @@ public class AuthController {
           return ResponseEntity.ok(user);
       } else {
           return ResponseEntity.notFound().build(); 
-      }
+      } 
   }    
  
   @DeleteMapping("/users/{id}")
@@ -188,4 +188,3 @@ public class AuthController {
       }
   }
   }
-

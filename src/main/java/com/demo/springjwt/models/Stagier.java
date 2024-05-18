@@ -30,8 +30,8 @@ public class Stagier {
     @JoinColumn(name = "id_condidature") // Nom de la colonne de clé étrangère dans la table reclamations
     private Candidature candidature;
 
-	
-
+	 
+ 
   
     public Stagier() {
     }
